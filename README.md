@@ -2,6 +2,8 @@
 
 Talk Summary: Need to find a good home within a school catchment area? Want to find the best TV episode of the Simpson’s? In a hurry to load hundreds of random parquet files with inconsistent schemas?  Give me 20 minutes of your time and I’ll show you how DuckDB - the fast, free & versatile analytical database - can be the solution for many a data challenge.
 
+## Setup
+If this is your first time here - be sure to follow the [setup instructions](./SETUP.md) to download the data.
 
 # Part A - DuckDB as a SQL OLAP database
 As a baseline - let's get familiar with SQL commands at the DuckDB CLI
@@ -241,6 +243,8 @@ summary
 FROM read_json('https://api.tvmaze.com/shows/83/episodebynumber?season=34&number=2', auto_detect=true, format='newline_delimited');
 ```
 
+## Notebook exercises
 
+Now jump over to the [notebook](./Notebook.ipynb) to continue the exercises
 
 

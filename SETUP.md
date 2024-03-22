@@ -23,12 +23,15 @@ cd data_books
 unzip archive.zip
 ``` 
 
-# Copy your iMessage SQLite DB
+## Copy your own iMessage SQLite DB
+Optional - if you want to get your own iMessage database
+
 ```bash
 cp ~/Library/Messages/chat.db .
 ```
 
 
+# Notebook
 
 ## Setup virtual python environment
 Create a [virtual python](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/) environment to keep dependencies separate. The _venv_ module is the preferred way to create and manage virtual environments.
@@ -44,9 +47,6 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
  ```
-
-
-# Optional steps
 
 
 ## Cleanup of virtual environment
