@@ -1,0 +1,8 @@
+# data that gets downloaded
+data_taxi/yellow_tripdata_*.parquet
+data_books/archive.zip
+data_books/books_data.csv
+data_books/Books_rating.csv
+
+# virtal env
+.venv/
