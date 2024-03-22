@@ -6,3 +6,7 @@ data_books/Books_rating.csv
 
 # virtal env
 .venv/
+
+# Temp
+*.db-shm
+*.db-wal

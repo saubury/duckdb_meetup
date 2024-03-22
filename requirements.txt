@@ -1,0 +1,7 @@
+duckdb
+notebook
+jupysql
+pandas
+matplotlib
+duckdb-engine
+seaborn

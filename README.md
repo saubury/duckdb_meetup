@@ -17,19 +17,19 @@ We'll be using the flexible [read_csv](https://duckdb.org/docs/data/csv/overview
 ```sql
 -- A single file; note the type detection
 SELECT *   
-FROM read_csv('food_collection/pizza_1.csv');
+FROM read_csv('./data_food/pizza_1.csv');
 
 -- Multiple files, adding a psudo-column filename
 SELECT * 
-FROM read_csv('food_collection/pizza*.csv', auto_detect=true, filename=true);
+FROM read_csv('./data_food/pizza*.csv', auto_detect=true, filename=true);
 
 -- Mixed CSV schemas - this will fail as the schema changes
 SELECT *  
-FROM read_csv('food_collection/*.csv', auto_detect=true);
+FROM read_csv('./data_food/*.csv', auto_detect=true);
 
 -- Mixed CSV schemas - this will adapt as the schema changes
 SELECT *
-FROM read_csv('food_collection/*.csv', 
+FROM read_csv('./data_food/*.csv', 
 union_by_name=true, 
 auto_detect=true,
 filename=true);
@@ -47,7 +47,7 @@ We'll be using the flexible [read_json](https://duckdb.org/docs/data/json/overvi
 ```sql
 -- Here's my FitBit data
 SELECT *
-FROM read_json('exercise-*.json');
+FROM read_json('./data_fitbit/exercise-*.json');
 
 -- Let's hint the types, adjust the timezone
 SELECT 
@@ -62,7 +62,7 @@ SELECT
 , distanceUnit
 , tcxLink
 , source
-FROM read_json('exercise-*.json'
+FROM read_json('./data_fitbit/exercise-*.json'
 , columns={startTime: 'TIMESTAMP', activityName: 'VARCHAR',  activityLevel: 'JSON', averageHeartRate: 'INTEGER', calories: 'INTEGER', duration: 'INTEGER', steps: 'INTEGER', tcxLink: 'VARCHAR', distance: 'DOUBLE', distanceUnit: 'VARCHAR', source: 'JSON'}
 , format='array'
 , timestampformat='%m/%d/%y %H:%M:%S');
@@ -77,7 +77,7 @@ We'll be using the flexible [read_parquet](https://duckdb.org/docs/data/parquet/
 CREATE OR REPLACE TABLE taxi_data
 AS
 SELECT *
-FROM read_parquet('data/yellow_tripdata*.parquet');
+FROM read_parquet('./data_taxi//yellow_tripdata*.parquet');
 
 SUMMARIZE taxi_data;
 
@@ -107,7 +107,7 @@ LOAD sqlite_scanner;
 
 --DETACH imessage_chat_sqlite;
 
-ATTACH './chat.db' as imessage_chat_sqlite (TYPE sqlite,  READ_ONLY TRUE);
+ATTACH './data_iMessage/chat.db' as imessage_chat_sqlite (TYPE sqlite,  READ_ONLY TRUE);
 
 SHOW ALL TABLES;
 
@@ -146,7 +146,7 @@ CREATE OR REPLACE TABLE book_details AS
 SELECT nextval('book_details_seq') AS book_details_id,
     'Title' as book_title, 
     description as book_description
-FROM read_csv('./books_data.csv',  auto_detect=TRUE);
+FROM read_csv('./data_books/books_data.csv',  auto_detect=TRUE);
 
 SUMMARIZE book_details;
 
@@ -199,15 +199,15 @@ SELECT
 
 -- Read an Excel binary file
 SELECT *
-FROM st_read('houses.xlsx', layer='houses');
+FROM st_read('./data_geo/houses.xlsx', layer='houses');
 
 -- reading Excel XLSX files
 CREATE OR REPLACE TABLE houses AS
 SELECT *
-FROM st_read('houses.xlsx', layer='houses');
+FROM st_read('./data_geo/houses.xlsx', layer='houses');
 
 SELECT geom 
-FROM st_read('./school_boundary_region.geojson');
+FROM st_read('./data_geo//school_boundary_region.geojson');
 
 SELECT house
 FROM houses
@@ -215,13 +215,10 @@ WHERE st_within(
     st_point(longitude, latitude), 
     (
         SELECT geom
-        FROM st_read('./school_boundary_region.geojson')
+        FROM st_read('./data_geo//school_boundary_region.geojson')
     )
 );
 ```
-
-
-
 
 ## Query JSON from an API
 
@@ -230,19 +227,18 @@ WHERE st_within(
 INSTALL httpfs;
 LOAD httpfs;
 
-select *
-from read_json('https://api.tvmaze.com/singlesearch/shows?q=The%20Simpsons', 
+SELECT *
+FROM read_json('https://api.tvmaze.com/singlesearch/shows?q=The%20Simpsons', 
 auto_detect=true, format='newline_delimited');
 
 -- Now we know The Simpsons is coded as show number 83
 
-select season, 
+SELECT season, 
 number, 
 name, 
 json_extract_string(rating, '$.average') as avg_rating, 
 summary
-from read_json('https://api.tvmaze.com/shows/83/episodebynumber?season=34&number=2', auto_detect=true, format='newline_delimited');
-
+FROM read_json('https://api.tvmaze.com/shows/83/episodebynumber?season=34&number=2', auto_detect=true, format='newline_delimited');
 ```
 
 
