@@ -209,7 +209,7 @@ SELECT *
 FROM st_read('./data_geo/houses.xlsx', layer='houses');
 
 SELECT geom 
-FROM st_read('./data_geo//school_boundary_region.geojson');
+FROM st_read('./data_geo/school_boundary_region.geojson');
 
 SELECT house
 FROM houses
@@ -217,7 +217,7 @@ WHERE st_within(
     st_point(longitude, latitude), 
     (
         SELECT geom
-        FROM st_read('./data_geo//school_boundary_region.geojson')
+        FROM st_read('./data_geo/school_boundary_region.geojson')
     )
 );
 ```
