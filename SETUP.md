@@ -57,3 +57,9 @@ deactivate
 ```
 
 If you want to re-enter the virtual environment just follow the same instructions above about activating a virtual environment. There’s no need to re-create the virtual environment.
+
+# DuckDB setup
+```
+.maxrows 10
+.timer on
+```

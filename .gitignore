@@ -10,3 +10,5 @@ data_books/Books_rating.csv
 # Temp
 *.db-shm
 *.db-wal
+taxi_hive/*
+.DS_Store

@@ -76,10 +76,14 @@ FROM read_json('./data_fitbit/exercise-*.json'
 We'll be using the flexible [read_parquet](https://duckdb.org/docs/data/parquet/overview#parquet-files) function
 
 ```sql
+-- How long will it take to load 78 million rows / 1.2GB of parquet data?
 CREATE OR REPLACE TABLE taxi_data
 AS
 SELECT *
-FROM read_parquet('./data_taxi//yellow_tripdata*.parquet');
+FROM read_parquet('./data_taxi/yellow_tripdata*.parquet');
+
+SELECT count(*)
+FROM taxi_data;
 
 SUMMARIZE taxi_data;
 
@@ -95,6 +99,20 @@ SELECT
 FROM stats;
 ```
 
+```sql
+-- Write hive partitioned parquet files to local target
+COPY (
+  SELECT *,
+    cast(datepart('year', tpep_pickup_datetime) as VARCHAR) as pickup_year,
+    cast(datepart('month', tpep_pickup_datetime) as VARCHAR) as pickup_month,
+  FROM taxi_data
+  WHERE pickup_year='2023'
+) TO 'taxi_hive' (
+    format parquet, 
+    partition_by (pickup_year, pickup_month), 
+    overwrite_or_ignore true
+);
+```
 
 
 
@@ -198,6 +216,21 @@ SELECT
       st_transform(Sydney_Opera_House, 'EPSG:4326', 'EPSG:3112'), 
       st_transform(Sydney_Harbour_Bridge, 'EPSG:4326', 'EPSG:3112')
   ) AS Aerial_Distance_M;
+
+
+-- Load the geometry outline for each country
+-- Save the country name and "geom" border in table world_boundaries
+CREATE OR REPLACE TABLE world_boundaries
+AS
+SELECT *
+FROM st_read('https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/world-administrative-boundaries/exports/geojson');
+
+-- Find the enclosing country for a given point
+-- We can which country the Eiffel Tower is in 
+SELECT name, continent
+FROM world_boundaries
+WHERE ST_Within(st_point(2.293412, 48.858935) , geom);
+
 
 -- Read an Excel binary file
 SELECT *
