@@ -40,7 +40,7 @@ filename=true);
 SELECT *
 FROM read_csv(
 'https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/cities/totals/sub-est2022.csv'
-);
+) LIMIT 10;
 ```
 
 ## Loading JSON files
@@ -244,7 +244,7 @@ FROM st_read('./data_geo/houses.xlsx', layer='houses');
 SELECT geom 
 FROM st_read('./data_geo/school_boundary_region.geojson');
 
-SELECT house
+SELECT house, longitude, latitude
 FROM houses
 WHERE st_within(
     st_point(longitude, latitude), 
